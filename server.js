@@ -3,6 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const { OpenAIApi, Configuration } = require('openai');
 
+const path = require('path');
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 const app = express();
 app.use(cors());
 app.use(express.json());
