@@ -10,15 +10,14 @@ app.use(express.static(__dirname));
 app.use(cors());
 app.use(express.json());
 
-import OpenAI from "openai";
-const client = new OpenAI();
+//const client = new OpenAI();
 
-const response = await client.responses.create({
-    model: "gpt-4.1",
-    input: "Write a one-sentence bedtime story about a unicorn.",
-});
+//const response = await client.responses.create({
+//    model: "gpt-4.1",
+//    input: "Write a one-sentence bedtime story about a unicorn.",
+//});
 
-console.log(response.output_text);
+//console.log(response.output_text);
 
 
 app.get('/', (req, res) => {
@@ -30,7 +29,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const completion = await client.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4.1 turbo',
       messages: [
         { role: 'system', content: 'Du bist eine empathische Jobberatung, die Potenziale erkennt, nicht nur Zertifikate.' },
         { role: 'user', content: userMessage },
