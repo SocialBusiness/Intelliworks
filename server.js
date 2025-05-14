@@ -7,9 +7,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const openai = new OpenAIApi(new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-}));
+import OpenAI from "openai";
+const client = new OpenAI();
+
+const response = await client.responses.create({
+    model: "gpt-4.1",
+    input: "Write a one-sentence bedtime story about a unicorn.",
+});
+
+console.log(response.output_text);
+
 
 app.post('/api/chat', async (req, res) => {
   const userMessage = req.body.message;
