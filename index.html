@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JobinKI – Werte. Talente. Zukunft.</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  @keyframes fadeSlideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-slide {
+    animation: fadeSlideUp 1s ease-out forwards;
+  }
+</style>
 </head>
 <body class="font-montserrat bg-white text-gray-900">
 
@@ -35,10 +51,10 @@
     <!-- Hero -->
     <section class="py-20">
       <div class="max-w-7xl mx-auto px-6 text-center">
-        <h1 class="text-4xl md:text-5xl font-light leading-tight">
+        <h1 class="text-4xl md:text-5xl font-light leading-tight animate-fade-slide">
           Mit JobinKI finden Unternehmen die <span class="text-white">Richtigen</span> – nicht nur die Verfügbaren.
         </h1>
-        <p class="mt-6 text-lg">
+        <p class="mt-6 text-lg animate-fade-slide" style="animation-delay: 0.3s;">
           KI-gestütztes Matching von Werten, Fähigkeiten und Persönlichkeit – für eine neue Ära im Recruiting.
         </p>
         <div class="mt-10 flex justify-center">
