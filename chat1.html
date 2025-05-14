@@ -42,21 +42,21 @@
 
 <script>
   const questions = [
-    "Wie ist dein Unternehmen?",
+    "Wie heißt dein Unternehmen?",
     "Gib hier bitte eine kurze Stellenbeschreibung ein.?",
     "In welcher Branche ist dein Unternehmen tätig?",
     "Wieviele Mitarbeiter hat dein Unternehmen?",
-    "Welche Werte sind in deinem Unternehmen wichtig?"
-	"Wie würdest du das Arbeitsumfeld in deinem Unternehmen beschreiben??
-	"Was passt besser zu deiner ausgeschriebenen Stelle? Stille Denker:innen, Kommunikationsstarke Persönlichkeiten, Wir schauen auf den Menschen, nicht auf Typen."
-	"Welche Qualifikationen und Fähigkeiten suchst du in deinem zukünftigen Mitarbeiter?"
-	"Welche Art von Anstellung bietest du an?"
-	"Was ist für dich wichtig, wenn es um die kulturelle Passung von Talenten zu deinem Unternehmen geht?"
-	"Welche Eigenschaften oder Haltungen ist dir in deinem Unternehmen besonders wichtig - unabhängig von Qualifikation?"
-	"Bist du bereit, geeignete Talente auch intern weiterzuentwickeln? z.B. Learning-on-the-Job, Mentoring, interne Schulungen."
-	"Hast du bereits Erfahrung mit Quereinsteiger:innen oder selbstgelernten Talenten gemacht? Wenn ja, bitte erzähle uns mehr darüber."
-	"Gibt es in deinem Unternehmen Aufgabenbereiche, in denen Lernbereitschaft wichtiger ist als ein Abschluss? Wenn ja, welche?"
-	"Wer ist die Ansprechperson für Bewerbungen in deinem Unternehmen?"
+    "Welche Werte sind in deinem Unternehmen wichtig?",
+	"Wie würdest du das Arbeitsumfeld in deinem Unternehmen beschreiben?",
+	"Was passt besser zu deiner ausgeschriebenen Stelle? Stille Denker:innen, Kommunikationsstarke Persönlichkeiten, Wir schauen auf den Menschen, nicht auf Typen.",
+	"Welche Qualifikationen und Fähigkeiten suchst du in deinem zukünftigen Mitarbeiter?",
+	"Welche Art von Anstellung bietest du an?",
+	"Was ist für dich wichtig, wenn es um die kulturelle Passung von Talenten zu deinem Unternehmen geht?",
+	"Welche Eigenschaften oder Haltungen ist dir in deinem Unternehmen besonders wichtig - unabhängig von Qualifikation?",
+	"Bist du bereit, geeignete Talente auch intern weiterzuentwickeln? z.B. Learning-on-the-Job, Mentoring, interne Schulungen.",
+	"Hast du bereits Erfahrung mit Quereinsteiger:innen oder selbstgelernten Talenten gemacht? Wenn ja, bitte erzähle uns mehr darüber.",
+	"Gibt es in deinem Unternehmen Aufgabenbereiche, in denen Lernbereitschaft wichtiger ist als ein Abschluss? Wenn ja, welche?",
+	"Wer ist die Ansprechperson für Bewerbungen in deinem Unternehmen?",
 	"Vielen Dank für deine Teilnahme, Bitte gib uns ein kurzes Feedback."
   ];
   const answers = [];
@@ -87,7 +87,7 @@
         step++;
         aiMsg.textContent = questions[step];
       } else {
-        aiMsg.innerHTML = "Danke! Basierend auf deinen Antworten passen folgende Rollen gut zu dir:<br><ul><li>Social Research Assistant</li><li>Content Analyst im Home Office</li><li>Detektivische Tätigkeiten bei Versicherungen</li></ul>";
+        aiMsg.innerHTML = "Danke! Basierend auf deinen Antworten passen folgende Talente gut in dein Unternehmen:<br><ul><li>Social Research Assistant</li><li>Content Analyst im Home Office</li><li>Detektivische Tätigkeiten bei Versicherungen</li></ul>";
         input.style.display = "none";
         document.querySelector("button").style.display = "none";
       }
