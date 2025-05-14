@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobinKI Chat-Matching</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #320366, #3533cd);
+      color: white;
+      padding: 40px;
+    }
+    #chat {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .message {
+      margin: 10px 0;
+    }
+    .user { text-align: right; }
+    .ai { text-align: left; }
+    input, button {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 10px;
+    }
+    button { background-color: #2c2abf; color: white; }
+  </style>
+</head>
+<body>
+
+<div id="chat">
+  <div id="messages"></div>
+  <input type="text" id="input" placeholder="Antwort eingeben..." />
+  <button onclick="next()">Absenden</button>
+</div>
+
+<script>
+  const questions = [
+    "Hallo! Was ist dein Name?",
+    "Welche Tätigkeiten machen dir Spaß?",
+    "Was kannst du besonders gut – auch ohne Ausbildung?",
+    "Lieber Teamarbeit oder alleine?",
+    "Wo fühlst du dich wohl – laut und lebendig oder ruhig und klar?"
+  ];
+  const answers = [];
+  let step = 0;
+
+  function next() {
+    const input = document.getElementById('input');
+    const msgBox = document.getElementById('messages');
+
+    if (input.value.trim() === "") return;
+
+    // Benutzerantwort anzeigen
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.textContent = input.value;
+    msgBox.appendChild(userMsg);
+    answers.push(input.value);
+
+    // Eingabe zurücksetzen
+    input.value = "";
+
+    // Neue KI-Frage oder Matching
+    setTimeout(() => {
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'message ai';
+
+      if (step < questions.length - 1) {
+        step++;
+        aiMsg.textContent = questions[step];
+      } else {
+        aiMsg.innerHTML = "Danke! Basierend auf deinen Antworten passen folgende Rollen gut zu dir:<br><ul><li>Social Research Assistant</li><li>Content Analyst im Home Office</li><li>Detektivische Tätigkeiten bei Versicherungen</li></ul>";
+        input.style.display = "none";
+        document.querySelector("button").style.display = "none";
+      }
+
+      msgBox.appendChild(aiMsg);
+      msgBox.scrollTop = msgBox.scrollHeight;
+    }, 500);
+  }
+
+  // Startfrage anzeigen
+  window.onload = () => {
+    const msgBox = document.getElementById('messages');
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'message ai';
+    aiMsg.textContent = questions[0];
+    msgBox.appendChild(aiMsg);
+  };
+</script>
+
+</body>
+</html>
