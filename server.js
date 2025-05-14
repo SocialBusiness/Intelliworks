@@ -1,15 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { OpenAIApi, Configuration } = require('openai');
-
+const { OpenAI } = require('openai');
 const path = require('path');
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 const app = express();
+app.use(express.static(__dirname));
+
 app.use(cors());
 app.use(express.json());
 
@@ -24,12 +21,16 @@ const response = await client.responses.create({
 console.log(response.output_text);
 
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.post('/api/chat', async (req, res) => {
   const userMessage = req.body.message;
 
   try {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-4',
+    const completion = await client.chat.completions.create({
+      model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Du bist eine empathische Jobberatung, die Potenziale erkennt, nicht nur Zertifikate.' },
         { role: 'user', content: userMessage },
