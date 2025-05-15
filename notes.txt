@@ -42,22 +42,28 @@
 
 <script>
   const questions = [
-  "Wie heißt dein Unternehmen?",
-  "Gib hier bitte eine kurze Stellenbeschreibung ein.",
-  "In welcher Branche ist dein Unternehmen tätig?",
-  "Wieviele Mitarbeiter hat dein Unternehmen?",
-  "Welche Werte sind in deinem Unternehmen wichtig?",
-	"Wie würdest du das Arbeitsumfeld in deinem Unternehmen beschreiben?",
-	"Was passt besser zu deiner ausgeschriebenen Stelle? Stille Denker:innen, Kommunikationsstarke Persönlichkeiten, Wir schauen auf den Menschen, nicht auf Typen.",
-	"Welche Qualifikationen und Fähigkeiten suchst du in deinem zukünftigen Mitarbeiter?",
-	"Welche Art von Anstellung bietest du an?",
-	"Was ist für dich wichtig, wenn es um die kulturelle Passung von Talenten zu deinem Unternehmen geht?",
-	"Welche Eigenschaften oder Haltungen ist dir in deinem Unternehmen besonders wichtig - unabhängig von Qualifikation?",
-	"Bist du bereit, geeignete Talente auch intern weiterzuentwickeln? z.B. Learning-on-the-Job, Mentoring, interne Schulungen.",
-	"Hast du bereits Erfahrung mit Quereinsteiger:innen oder selbstgelernten Talenten gemacht? Wenn ja, bitte erzähle uns mehr darüber.",
-	"Gibt es in deinem Unternehmen Aufgabenbereiche, in denen Lernbereitschaft wichtiger ist als ein Abschluss? Wenn ja, welche?",
-	"Wer ist die Ansprechperson für Bewerbungen in deinem Unternehmen?",
-	"Vielen Dank für deine Teilnahme, Bitte gib uns ein kurzes Feedback."
+  ""Schön dass du hier bist." "Was suchst du gerade – neue Perspektiven oder ein passenderes Umfeld?"",
+	    "Wie ist dein Name?",
+	    "Wann bist du geboren?",
+	    "Welche Sprachen sprichst du?",
+	    "Nach welchen Stellen dürfen wir für dich suchen?",
+	    "Was ist die Beruf?",
+	    "Wieviele Jahre Berufserfahrung hast du in dem Bereich?",
+	    "Welche Qualifikationen bringst du mit?",
+	    "Welche Erfahrungen hast du gesammelt, die nicht durch Zeugnisse oder Zertifikate nachweisbar sind, aber dir heute helfen deine Stärken einzusetzen?",
+	    "Wenn du dich heute frei entscheiden könntest, was würdest du gerne beruflich machen?",
+	    "Gab es berufliche Umwege, Brüche oder Neustarts in deinem Leben, die dich besonders geprägt haben?",
+	    "Hast du dir neues Wissen oder Fähigkeiten in den letzten Jahren selbst beigebracht?",
+	    "Hast du Interesse an einer beruflichen Neuorientierung?",
+	    "Würdest du ein Praktikum in Erwägung ziehen, wenn du ein Job findest der ausschliesslich deinen persönlichen Fähigkeiten entspricht?",
+	    "Welche Werte sind dir bei der Arbeit besonders wichtig?",
+	    "Wie würdest du dich eher einschätzen? Introvertiert oder extrovertiert?",
+	    "Wie würdest du deinen Arbeitsstil beschreiben?",
+	    "Welches Abeitsumfeld bevorzugst du? Büro, Hybrid, Remote?",
+	    "Wie sind deine Gehaltsvorstellungen?",
+	    "Wo siehst du dich in 5 Jahren? Träume groß, so können wir dich besser kennenlernen.",
+	    "Gibt es etwas das du uns gerne noch mitteilen möchtest?",
+	    "Vielen Dank für deine Teilnahme, Bitte gib uns ein kurzes Feedback."
   ];
   const answers = [];
   let step = 0;
