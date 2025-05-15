@@ -49,6 +49,34 @@ app.post('/api/chat', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
 
+app.post('/chat', async (req, res) => {
+  const userMessage = req.body.message;
+
+  if (userMessage.toLowerCase().includes('sozial')) {
+    const jobs = await fetchJobs('Sozialarbeit', 'Berlin');
+
+    if (jobs.length === 0) {
+      return res.json({ reply: 'Leider keine passenden Stellen gefunden.' });
+    }
+
+    const jobList = jobs.map(job => 
+      `**${job.titel}** bei ${job.arbeitgeber} in ${job.ort}\n${job.link}`
+    ).join('\n\n');
+
+    return res.json({ reply: `Hier sind einige passende Stellen:\n\n${jobList}` });
+  }
+
+  // sonst: normale KI-Antwort
+  const gptResponse = await client.chat.completions.create({
+    model: 'gpt-4.1 turbo',
+    messages: [
+      { role: 'system', content: 'Du bist eine empathische Jobberatung, die Potenziale erkennt, nicht nur Zertifikate.' },
+      { role: 'user', content: userMessage },
+    ],
+  });
+  res.json({ reply: gptResponse.data.choices[0].message.content });
+});
+
 async function fetchJobs(keyword, ort = 'Berlin') {
   try {
     const response = await axios.get(
