@@ -1,44 +1,47 @@
-<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JobinKI – Chat</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobinKI Chat-Matching</title>
   <style>
-    .chat-box {
-      max-height: 70vh;
-      overflow-y: auto;
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #320366, #3533cd);
+      color: white;
+      padding: 40px;
     }
+    #chat {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .message {
+      margin: 10px 0;
+    }
+    .user { text-align: right; }
+    .ai { text-align: left; }
+    input, button {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 10px;
+    }
+    button { background-color: #2c2abf; color: white; }
   </style>
 </head>
-<body class="bg-gradient-to-b from-[#320366] to-[#3533cd] text-white flex items-center justify-center min-h-screen px-4">
-  <div class="w-full max-w-2xl bg-white text-black rounded-xl shadow-xl p-6">
-    <h1 class="text-2xl font-semibold text-center mb-4">Starte dein Gespräch</h1>
-    
-    <div id="chat" class="chat-box mb-4 space-y-3"></div>
-    
-    <form id="chat-form" class="flex gap-2">
-      <input
-        type="text"
-        id="user-input"
-        placeholder="Deine Antwort..."
-        class="flex-1 border rounded px-3 py-2"
-        required
-      />
-      <button type="submit" class="bg-[#320366] text-white px-4 py-2 rounded hover:bg-[#2c2abf]">
-        Senden
-      </button>
-    </form>
-  </div>
+<body>
 
-  <script>
-    const chatContainer = document.getElementById("chat");
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("user-input");
+<div id="chat">
+  <div id="messages"></div>
+  <input type="text" id="input" placeholder="Antwort eingeben..." />
+  <button onclick="next()">Absenden</button>
+</div>
 
-    const fragen = [
-	    "„Schön dass du hier bist." "Was suchst du gerade – neue Perspektiven oder ein passenderes Umfeld?"",
+<script>
+  const questions = [
+      "Schön dass du hier bist. Was suchst du gerade – neue Perspektiven oder ein passenderes Umfeld?",
 	    "Wie ist dein Name?",
 	    "Wann bist du geboren?",
 	    "Welche Sprachen sprichst du?",
@@ -60,73 +63,54 @@
 	    "Wo siehst du dich in 5 Jahren? Träume groß, so können wir dich besser kennenlernen.",
 	    "Gibt es etwas das du uns gerne noch mitteilen möchtest?",
 	    "Vielen Dank für deine Teilnahme, Bitte gib uns ein kurzes Feedback."
-    ];
+  ];
+  const answers = [];
+  let step = 0;
 
-    let antworten = [];
-    let frageIndex = 0;
+  function next() {
+    const input = document.getElementById('input');
+    const msgBox = document.getElementById('messages');
 
-    function neueNachricht(text, sender = "bot") {
-      const div = document.createElement("div");
-      div.className = sender === "bot" ? "text-left" : "text-right";
-      div.innerHTML = `<div class="inline-block px-4 py-2 rounded-xl max-w-xs ${
-        sender === "bot" ? "bg-gray-200 text-black" : "bg-[#3533cd] text-white"
-      }">${text}</div>`;
-      chatContainer.appendChild(div);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
+    if (input.value.trim() === "") return;
 
-    function naechsteFrage() {
-      if (frageIndex < fragen.length) {
-        neueNachricht(fragen[frageIndex], "bot");
+    // Benutzerantwort anzeigen
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.textContent = input.value;
+    msgBox.appendChild(userMsg);
+    answers.push(input.value);
+
+    // Eingabe zurücksetzen
+    input.value = "";
+
+    // Neue KI-Frage oder Matching
+    setTimeout(() => {
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'message ai';
+
+      if (step < questions.length - 1) {
+        step++;
+        aiMsg.textContent = questions[step];
       } else {
-        sendeAnOpenAI();
+        aiMsg.innerHTML = "Danke! Basierend auf deinen Antworten passen folgende Talente gut in dein Unternehmen:<br><ul><li>Social Research Assistant</li><li>Content Analyst im Home Office</li><li>Detektivische Tätigkeiten bei Versicherungen</li></ul>";
+        input.style.display = "none";
+        document.querySelector("button").style.display = "none";
       }
-    }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const userText = input.value.trim();
-      if (!userText) return;
+      msgBox.appendChild(aiMsg);
+      msgBox.scrollTop = msgBox.scrollHeight;
+    }, 500);
+  }
 
-      neueNachricht(userText, "user");
-      antworten.push({ frage: fragen[frageIndex], antwort: userText });
-      input.value = "";
-      frageIndex++;
-      setTimeout(naechsteFrage, 500);
-    });
+  // Startfrage anzeigen
+  window.onload = () => {
+    const msgBox = document.getElementById('messages');
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'message ai';
+    aiMsg.textContent = questions[0];
+    msgBox.appendChild(aiMsg);
+  };
+</script>
 
-    async function sendeAnOpenAI() {
-      neueNachricht("Danke! Ich werte deine Antworten aus...", "bot");
-
-      const prompt = antworten.map(pair => `${pair.frage} ${pair.antwort}`).join("\n");
-
-      try {
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "API"
-          },
-          body: JSON.stringify({
-            model: "gpt-4",
-            messages: [
-              { role: "system", content: "Du bist ein Karriere-Coach. Analysiere die Angaben und schlage passende Stellen vor." },
-              { role: "user", content: prompt }
-            ]
-          })
-        });
-
-        const data = await res.json();
-        const reply = data.choices[0].message.content;
-        neueNachricht(reply, "bot");
-      } catch (error) {
-        console.error(error);
-        neueNachricht("Es gab ein Problem beim Abrufen deiner Vorschläge.", "bot");
-      }
-    }
-
-    // Initiale Frage starten
-    naechsteFrage();
-  </script>
 </body>
 </html>
