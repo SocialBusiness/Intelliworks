@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -42,29 +42,30 @@
 
 <script>
   const questions = [
-      "Schön dass du hier bist. Was suchst du gerade – neue Perspektiven oder ein passenderes Umfeld?",
-	    "Wie ist dein Name?",
-	    "Wann bist du geboren?",
-	    "Welche Sprachen sprichst du?",
-	    "Nach welchen Stellen dürfen wir für dich suchen?",
-	    "Hast du eine Ausbildung abgeschlossen?",
-	    "Hast du Berufserfahrung hast du in dem Bereich?",
-	    "Welche Qualifikationen bringst du mit?",
-	    "Welche Erfahrungen hast du gesammelt, die nicht durch Zeugnisse oder Zertifikate nachweisbar sind, aber dir heute helfen deine Stärken einzusetzen?",
-	    "Wenn du dich heute frei entscheiden könntest, was würdest du gerne beruflich machen?",
-	    "Gab es berufliche Umwege, Brüche oder Neustarts in deinem Leben, die dich besonders geprägt haben?",
-	    "Hast du dir neues Wissen oder Fähigkeiten in den letzten Jahren selbst beigebracht?",
-	    "Hast du Interesse an einer beruflichen Neuorientierung?",
-	    "Würdest du ein Praktikum in Erwägung ziehen, wenn du ein Job findest der ausschliesslich deinen persönlichen Fähigkeiten entspricht?",
-	    "Welche Werte sind dir bei der Arbeit besonders wichtig?",
-	    "Wie würdest du dich eher einschätzen? Introvertiert oder extrovertiert?",
-	    "Wie würdest du deinen Arbeitsstil beschreiben?",
-	    "Welches Abeitsumfeld bevorzugst du? Büro, Hybrid, Remote?",
-	    "Wie sind deine Gehaltsvorstellungen?",
-	    "Wo siehst du dich in 5 Jahren? Träume groß, so können wir dich besser kennenlernen.",
-	    "Gibt es etwas das du uns gerne noch mitteilen möchtest?",
-	    "Vielen Dank für deine Teilnahme, Bitte gib uns ein kurzes Feedback."
+    "Schön dass du hier bist. Was suchst du gerade – neue Perspektiven oder ein passenderes Umfeld?",
+    "Wie ist dein Name?",
+    "Wann bist du geboren?",
+    "Welche Sprachen sprichst du?",
+    "Nach welchen Stellen dürfen wir für dich suchen?",
+    "Hast du eine Ausbildung abgeschlossen?",
+    "Hast du Berufserfahrung hast du in dem Bereich?",
+    "Welche Qualifikationen bringst du mit?",
+    "Welche Erfahrungen hast du gesammelt, die nicht durch Zeugnisse oder Zertifikate nachweisbar sind, aber dir heute helfen deine Stärken einzusetzen?",
+    "Wenn du dich heute frei entscheiden könntest, was würdest du gerne beruflich machen?",
+    "Gab es berufliche Umwege, Brüche oder Neustarts in deinem Leben, die dich besonders geprägt haben?",
+    "Hast du dir neues Wissen oder Fähigkeiten in den letzten Jahren selbst beigebracht?",
+    "Hast du Interesse an einer beruflichen Neuorientierung?",
+    "Würdest du ein Praktikum in Erwägung ziehen, wenn du ein Job findest der ausschliesslich deinen persönlichen Fähigkeiten entspricht?",
+    "Welche Werte sind dir bei der Arbeit besonders wichtig?",
+    "Wie würdest du dich eher einschätzen? Introvertiert oder extrovertiert?",
+    "Wie würdest du deinen Arbeitsstil beschreiben?",
+    "Welches Abeitsumfeld bevorzugst du? Büro, Hybrid, Remote?",
+    "Wie sind deine Gehaltsvorstellungen?",
+    "Wo siehst du dich in 5 Jahren? Träume groß, so können wir dich besser kennenlernen.",
+    "Gibt es etwas das du uns gerne noch mitteilen möchtest?",
+    "Vielen Dank für deine Teilnahme. Wir suchen passende Jobs für dich…"
   ];
+
   const answers = [];
   let step = 0;
 
@@ -84,22 +85,41 @@
     // Eingabe zurücksetzen
     input.value = "";
 
-    // Neue KI-Frage oder Matching
-    setTimeout(() => {
+    setTimeout(async () => {
       const aiMsg = document.createElement('div');
       aiMsg.className = 'message ai';
 
       if (step < questions.length - 1) {
         step++;
         aiMsg.textContent = questions[step];
+        msgBox.appendChild(aiMsg);
+        msgBox.scrollTop = msgBox.scrollHeight;
       } else {
-        aiMsg.innerHTML = "Danke! Basierend auf deinen Antworten passen folgende Talente gut in dein Unternehmen:<br><ul><li>Social Research Assistant</li><li>Content Analyst im Home Office</li><li>Detektivische Tätigkeiten bei Versicherungen</li></ul>";
+        // 💼 Jobs abrufen
+        aiMsg.textContent = "Einen Moment, wir suchen passende Jobs für dich...";
+        msgBox.appendChild(aiMsg);
+        msgBox.scrollTop = msgBox.scrollHeight;
+
+        try {
+          const response = await fetch('/api/jobs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: answers[4], location: 'Rostock' })
+          });
+
+          const data = await response.json();
+
+          aiMsg.innerHTML = "<strong>Hier sind passende Stellen für dich:</strong><ul>" +
+            data.jobs.map(job => `<li>${job.title} – ${job.location}</li>`).join('') +
+            "</ul>";
+        } catch (error) {
+          aiMsg.textContent = "Leider konnten wir gerade keine Jobs abrufen.";
+        }
+
         input.style.display = "none";
         document.querySelector("button").style.display = "none";
+        msgBox.scrollTop = msgBox.scrollHeight;
       }
-
-      msgBox.appendChild(aiMsg);
-      msgBox.scrollTop = msgBox.scrollHeight;
     }, 500);
   }
 
@@ -111,7 +131,9 @@
     aiMsg.textContent = questions[0];
     msgBox.appendChild(aiMsg);
   };
+  
 </script>
 
 </body>
+
 </html>

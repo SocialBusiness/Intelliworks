@@ -3,119 +3,62 @@ const express = require('express');
 const cors = require('cors');
 const { OpenAI } = require('openai');
 const path = require('path');
-const { default: axios } = require('axios');
-const axios = require(axios);
-const { jobsSearch } = require('jobsuche-api-js');
+const axios = require('axios');
 
 const app = express();
 app.use(express.static(__dirname));
-
 app.use(cors());
 app.use(express.json());
 
-//const client = new OpenAI();
-
-//const response = await client.responses.create({
-//    model: "gpt-4.1-turbo",
-//    input: "Write a one-sentence bedtime story about a unicorn.",
-//});
-
-//console.log(response.output_text);
-
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// 💬 KI-Chat-Endpunkt
 app.post('/api/chat', async (req, res) => {
   const userMessage = req.body.message;
 
   try {
     const completion = await client.chat.completions.create({
-      model: 'gpt-4.1 turbo',
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: 'Du bist eine empathische Jobberatung, die Potenziale erkennt, nicht nur Zertifikate.' },
         { role: 'user', content: userMessage },
       ],
     });
 
-    res.json({ reply: completion.data.choices[0].message.content });
+    res.json({ reply: completion.choices[0].message.content });
   } catch (error) {
-    console.error(error.message);
+    console.error('Chat Error:', error.message);
     res.status(500).json({ reply: 'Ein Fehler ist aufgetreten.' });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
+// 🔍 Neue Route: Jobsuche per API
+app.post('/api/jobs', async (req, res) => {
+  const { query, location } = req.body;
 
-app.post('/chat', async (req, res) => {
-  const userMessage = req.body.message;
+  try {
+    const response = await axios.get('https://api.deine-jobquelle.de/v1/jobs', {
+      params: {
+        keyword: query,
+        location: location || 'Rostock',
+        limit: 5,
+      },
+      headers: {
+        Authorization: `Bearer ${process.env.JOB_API_KEY}`, // Job-API-Key in .env!
+      },
+    });
 
-  if (userMessage.toLowerCase().includes('sozial')) {
-    const jobs = await fetchJobs('Sozialarbeit', 'Berlin');
-
-    if (jobs.length === 0) {
-      return res.json({ reply: 'Leider keine passenden Stellen gefunden.' });
-    }
-
-    const jobList = jobs.map(job => 
-      `**${job.titel}** bei ${job.arbeitgeber} in ${job.ort}\n${job.link}`
-    ).join('\n\n');
-
-    return res.json({ reply: `Hier sind einige passende Stellen:\n\n${jobList}` });
+    const jobs = response.data.jobs || [];
+    res.json({ jobs });
+  } catch (error) {
+    console.error('Job API Error:', error.message);
+    res.status(500).json({ error: 'Fehler beim Abrufen der Jobs.' });
   }
-
-  // sonst: normale KI-Antwort
-  const gptResponse = await client.chat.completions.create({
-    model: 'gpt-4.1 turbo',
-    messages: [
-      { role: 'system', content: 'Du bist eine empathische Jobberatung, die Potenziale erkennt, nicht nur Zertifikate.' },
-      { role: 'user', content: userMessage },
-    ],
-  });
-  res.json({ reply: gptResponse.data.choices[0].message.content });
 });
 
-async function fetchJobs(keyword, ort = 'Berlin') {
-  try {
-    const response = await axios.get(
-      'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs',
-      {
-        headers: {
-          'X-API-Key': 'jobboerse-jobsuche'
-        },
-        params: {
-          was: keyword,
-          wo: ort,
-          size: 5 // Anzahl der zurückgegebenen Jobs
-        }
-      }
-    );
-
-    const jobs = response.data?.stellenangebote || [];
-    return jobs.map(job => ({
-      titel: job.beruf,
-      arbeitgeber: job.arbeitgeber,
-      ort: job.arbeitsort,
-      link: job.links[0]?.url
-    }));
-  } catch (error) {
-    console.error('Fehler beim Abrufen der Jobs:', error.message);
-    return [];
-  }
-}
-
-const { jobsSearch } = require('jobsuche-api-js');
-
-async function searchJobs() {
-  const searchParams = { what: 'Sozialarbeit', where: 'Berlin' };
-  try {
-    const results = await jobsSearch(searchParams);
-    console.log(results);
-  } catch (error) {
-    console.error('Fehler beim Abrufen der Jobs:', error);
-  }
-}
-
-searchJobs();
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ Server läuft auf Port ${PORT}`));
